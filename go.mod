@@ -1,4 +1,4 @@
-module github.com/A-Daneel/factuurTui
+module github.com/A-Daneel/miniature-guacamole
 
 go 1.17
 

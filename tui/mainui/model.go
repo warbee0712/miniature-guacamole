@@ -1,7 +1,7 @@
 package mainui
 
 import (
-	"github.com/A-Daneel/factuurTui/tui/constants"
+	"github.com/A-Daneel/miniature-guacamole/tui/constants"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"

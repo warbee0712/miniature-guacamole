@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/A-Daneel/factuurTui/tui/mainui"
-	"github.com/A-Daneel/factuurTui/tui/yearui"
+	"github.com/A-Daneel/miniature-guacamole/tui/mainui"
+	"github.com/A-Daneel/miniature-guacamole/tui/yearui"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
