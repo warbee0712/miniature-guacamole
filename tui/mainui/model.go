@@ -19,7 +19,7 @@ type Model struct {
 
 // New initialize the projectui model for your program
 func New() tea.Model {
-	m := Model{list: list.NewModel(menu(), list.NewDefaultDelegate(), 0, 0)}
+	m := Model{list: list.NewModel(menu(), list.NewDefaultDelegate(), 100, 25)} //Updated the default width and height to large defaults from 0.
 	m.list.Title = "Main Menu thing"
 	return m
 }
@@ -35,8 +35,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		top, right, bottom, left := constants.DocStyle.GetMargin()
-		m.list.SetSize(msg.Width-left-right, msg.Height-top-bottom-1)
+		m = m.UpdateWindowSize(msg.Width, msg.Height).(Model)
 	case tea.KeyMsg:
 		switch {
 		case msg.String() == "ctrl+c":
@@ -54,6 +53,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // View return the text UI to be output to the terminal
 func (m Model) View() string {
 	return constants.DocStyle.Render(m.list.View() + "\n")
+}
+
+func (m Model) UpdateWindowSize(w int, h int) tea.Model {
+	top, right, bottom, left := constants.DocStyle.GetMargin()
+	m.list.SetSize(w-left-right, h-top-bottom-1)
+	return m
 }
 
 type item struct {

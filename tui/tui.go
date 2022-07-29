@@ -73,6 +73,11 @@ func (m MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.windowSize = msg
+		// Update the sub views when the size of the window is changed
+		// It appears this is called during the init phase to get the inital
+		// window size.
+		m.year, _ = m.year.Update(msg)
+		m.main, _ = m.main.Update(msg)
 	case yearui.BackMsg:
 		m.state = menuView
 	case mainui.SelectMsg:
