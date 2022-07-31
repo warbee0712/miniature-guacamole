@@ -47,6 +47,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case msg.String() == "ctrl+c":
 			return m, tea.Quit
 		case key.Matches(msg, constants.Keymap.Enter):
+			// Here I could use some help, no idea how to try this without just
+			// making a new list model and replacing it. That feels dirty though.
 			// 1) save the selected item
 			// 2) change items to second list
 			// 3) call a function that uses both options (preferably non blocking)
