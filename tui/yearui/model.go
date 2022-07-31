@@ -46,6 +46,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch {
 		case msg.String() == "ctrl+c":
 			return m, tea.Quit
+		case key.Matches(msg, constants.Keymap.Enter):
+			// 1) save the selected item
+			// 2) change items to second list
+			// 3) call a function that uses both options (preferably non blocking)
 		case key.Matches(msg, constants.Keymap.Back):
 			return m, func() tea.Msg {
 				return BackMsg(true)
@@ -82,6 +86,15 @@ func yearMenu() []list.Item {
 		item{title: "do action a", desc: ""},
 		item{title: "maybe action b?", desc: ""},
 		item{title: "naaah, go back to start", desc: ""},
+	}
+	return menu
+}
+
+func secondMenu() []list.Item {
+	menu := []list.Item{
+		item{title: "mabye", desc: ""},
+		item{title: "charm", desc: ""},
+		item{title: "bubbles", desc: ""},
 	}
 	return menu
 }
