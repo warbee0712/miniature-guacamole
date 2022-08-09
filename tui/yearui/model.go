@@ -40,8 +40,7 @@ func mockApiCall() {
     endpoints = ["user1","user2","user3","user4"]
     for _, call in range := endpoints {
             //update list, maybe a bubbles textarea? does bubbles have a popup?
-            //how does golang run functions async, or is that not needed?
-    }
+            //how does golang run functions async, or is that not needed? }
 }
 
 // Update handle IO and commands
@@ -56,7 +55,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case msg.String() == "ctrl+c":
 			return m, tea.Quit
 		case key.Matches(msg, constants.Keymap.Enter):
-            //
+            mockApiCall()
 		case key.Matches(msg, constants.Keymap.Back):
 			return m, func() tea.Msg {
 				return BackMsg(true)
