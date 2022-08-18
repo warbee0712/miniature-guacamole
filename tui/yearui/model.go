@@ -1,16 +1,21 @@
 package yearui
 
 import (
+	"time"
+
 	"github.com/A-Daneel/miniature-guacamole/tui/constants"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 var cmd tea.Cmd
 
 // BackMsg change state back to project view
 type BackMsg bool
+
+var apiResults string
 
 // Model the Years model definition
 type Model struct {
@@ -35,12 +40,10 @@ func (m Model) Init() tea.Cmd {
 	return nil
 }
 
-func mockApiCall() {
-    url = "https://www.somewebsite.com/v1/"
-    endpoints = ["user1","user2","user3","user4"]
-    for _, call in range := endpoints {
-            //update list, maybe a bubbles textarea? does bubbles have a popup?
-            //how does golang run functions async, or is that not needed? }
+func mockApiCall(call string) {
+	url := "https://www.somewebsite.com/v1"
+	apiResults += url + "/" + call + "\n"
+	time.Sleep(5 * time.Second)
 }
 
 // Update handle IO and commands
@@ -55,7 +58,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case msg.String() == "ctrl+c":
 			return m, tea.Quit
 		case key.Matches(msg, constants.Keymap.Enter):
-            mockApiCall()
+			endpoints := [4]string{"user1", "user2", "user3", "user4"}
+			for _, call := range endpoints {
+				mockApiCall(call)
+			}
 		case key.Matches(msg, constants.Keymap.Back):
 			return m, func() tea.Msg {
 				return BackMsg(true)
@@ -76,7 +82,8 @@ func (m Model) UpdateWindowSize(w int, h int) tea.Model {
 
 // View return the text UI to be output to the terminal
 func (m Model) View() string {
-	return constants.DocStyle.Render(m.list.View() + "\n")
+	//return constants.DocStyle.Render(m.list.View() + "\n")
+	return lipgloss.JoinHorizontal(lipgloss.Top, m.list.View()+"\n", apiResults)
 }
 
 type item struct {
