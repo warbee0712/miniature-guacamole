@@ -22,7 +22,12 @@ type (
 
 var apiResults string
 
-const defaultApiCall = "user1"
+var resultStyle = lipgloss.NewStyle().Border(lipgloss.DoubleBorder()).BorderForeground(lipgloss.Color("147")).Foreground(lipgloss.Color("102")).Render
+
+const (
+	defaultApiCall = "user1"
+	FIRST          = 0
+)
 
 // Model the Years model definition
 type Model struct {
@@ -31,7 +36,9 @@ type Model struct {
 
 // New initialize the projectui model for your program
 func New() tea.Model {
-	m := Model{list: list.NewModel(yearMenu(), list.NewDefaultDelegate(), 100, 25)} // Updated the default width and height to large defaults from 0.
+	m := Model{
+		list: list.NewModel(yearMenu(), list.NewDefaultDelegate(), 100, 25),
+	} // Updated the default width and height to large defaults from 0.
 	m.list.Title = "second menu, maybe borked"
 	m.list.AdditionalShortHelpKeys = func() []key.Binding {
 		return []key.Binding{
@@ -52,7 +59,7 @@ func (m Model) Init() tea.Cmd {
 
 func mockApiCall(call string) tea.Msg {
 	url := "https://www.somewebsite.com/v1"
-	apiResults += url + "/" + call + "\n"
+	apiResults = url + "/" + call + "\n"
 	// TODO: actually query for a response
 	return apiMsg(apiResults)
 	// What do you want to do with the response? Have it display in the
@@ -64,6 +71,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	var cmds []tea.Cmd
 	switch msg := msg.(type) {
+	case apiMsg:
+		// TODO: whatever you'd like to happen after the first API call
 	case tea.WindowSizeMsg:
 		m = m.UpdateWindowSize(msg.Width, msg.Height).(Model)
 	case tickMsg:
@@ -74,10 +83,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case key.Matches(msg, constants.Keymap.Enter):
 			// TODO: Maybe they should select a user then do a get request for that user?
-			endpoints := [4]string{"user1", "user2", "user3", "user4"}
-			for _, call := range endpoints {
-				mockApiCall(call)
-			}
+			mockApiCall(m.list.SelectedItem().FilterValue())
 		case key.Matches(msg, constants.Keymap.Back):
 			return m, func() tea.Msg {
 				return BackMsg(true)
@@ -98,8 +104,11 @@ func (m Model) UpdateWindowSize(w int, h int) tea.Model {
 
 // View return the text UI to be output to the terminal
 func (m Model) View() string {
-	// return constants.DocStyle.Render(m.list.View() + "\n")
-	return lipgloss.JoinHorizontal(lipgloss.Top, m.list.View()+"\n", apiResults)
+	result := apiResults
+	if apiResults != "" {
+		result = resultStyle(apiResults)
+	}
+	return lipgloss.JoinHorizontal(lipgloss.Top, m.list.View()+"\n", result)
 }
 
 type item struct {
